@@ -14,7 +14,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 import jinja2
 from flaskext.markdown import Markdown
 
-from wtforms import Form, BooleanField, TextField, TextAreaField, PasswordField, RadioField, SelectField, SelectMultipleField, BooleanField, IntegerField, HiddenField, SubmitField, validators, ValidationError, widgets
+from wtforms import Form, BooleanField, StringField as TextField, TextAreaField, PasswordField, RadioField, SelectField, SelectMultipleField, BooleanField, IntegerField, HiddenField, SubmitField, validators, ValidationError, widgets
 
 import diffhtml
 
