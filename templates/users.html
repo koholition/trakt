@@ -1,21 +1,21 @@
 {% extends "_base.html" %}
 
-{% block title %} Poslední změny {% endblock %}
+{% block title %} Recent Changes {% endblock %}
 
 {% block content %}
 
     <ol class="breadcrumb">
         <li><a href="{{ url_for('index') }}">{{ g.sitename }}</a>
-        <li>Seznam uživatelů
+        <li>User List
     </ol>
-    <h2>Seznam uživatelů</h2>
+    <h2>User List</h2>
     <table class="table table-condensed">
         <thead>
             <tr>
                 <td>id</td>
-                <td>už. jméno</td>
-                <td>hlasů</td>
-                <td>datum registrace</td>
+                <td>username</td>
+                <td>votes</td>
+                <td>registration date</td>
             </tr>
         <tbody>
         {% for user in users %}
