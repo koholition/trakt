@@ -49,7 +49,7 @@
             <button class="btn btn-default btn-sm" id="show-metadata-button">Ukaž metadata</button>
             <table class="table table-condensed table-data">
                 <tr>
-                    <th scope="row">Číslo</th>
+                    <th scope="row">Number</th>
                     <td>#{{ term.number }}</td>
                 </tr>
                     <th scope="row">Identifier</th>
@@ -80,7 +80,7 @@
                                 </div>
                             </div>
                             <a href="{{url_for('reference.create_view', term0_id=term.id)}}"
-                                class="btn btn-default btn-block btn-xs">Přidat referenci</a>
+                                class="btn btn-default btn-block btn-xs">Add reference</a>
                         </td>
                     </tr>
                 {% endif %}
@@ -133,22 +133,22 @@
                 {% endif %}
             {% endmacro %}
             {% set speakers = term.references_of_type("speaker") %}
-            {{ short_list_of_references(speakers, "Mluvčí") }}
+            {{ short_list_of_references(speakers, "Speakers") }}
             {% set locations = term.references_of_type("location") %}
-            {{ short_list_of_references(locations, "Umístění") }}
+            {{ short_list_of_references(locations, "Locations") }}
             {{ list_of_references(term.references,
-                1, "references", "Referencuje") }}
+                1, "references", "References") }}
             {{ list_of_references(term.referenced,
-                0, "referenced", "Je referencován") }}
+                0, "referenced", "Is referenced by") }}
             {% set potentially_referenced = term.potentially_referenced %}
             {% if potentially_referenced %}
                 <div>
                     <button class="btn btn-default btn-xs"
                       id="potentially-referenced-button">
-                          Ukaž {{potentially_referenced|length}} potenciálně ref.
+                          Show  {{potentially_referenced|length}} potentially ref.
                     </button>
                     <div id="potentially-referenced">
-                        <strong>Je potenciálně referencován</strong>
+                        <strong>Is potentially referenced by</strong>
                         <ul class="references">
                             {% for term in term.potentially_referenced %}
                                 <li><a href="{{term.url}}">{{ term_short(term) }}</a>
@@ -158,7 +158,7 @@
                 </div>
             {% endif %}
             {{ list_of_references(term.referenced_of_type("speaker"),
-                0, "as-speaker", "Je mluvčím") }}
+                0, "as-speaker", "Is a speaker") }}
         </div>
         <div class="col-md-8">
             <div class="row">
@@ -172,7 +172,7 @@
                 {% endif %}
                 <div class="{% if not term.dialogue %}col-md-6{% endif %}">
                     <dl class="term-info {% if term.dialogue %}term-info-dialogue{% endif %}">
-                        <dt>Anglicky:</dt>
+                        <dt>English:</dt>
                             <dd id="dd-text-en">{{ term.text_en }}</dd>
                     </dl>
                     {% if not term.dialogue %}
@@ -184,7 +184,7 @@
                 <div class="{% if not term.dialogue %}col-md-6{% endif %}">
                     {% if term.text_jp %}
                         <dl class="term-info term-info-jp {% if term.dialogue %}term-info-dialogue{% endif %}"">
-                            <dt>Japonsky:</dt>
+                            <dt>Japanese:</dt>
                                 <dd id="dd-text-jp">{{ term.text_jp }}</dd>
                         </dl>
                         {% if not term.dialogue %}
@@ -266,29 +266,29 @@
                         {% if suggestion.status == SS.approved
                             and suggestion.user == current_user
                             and suggestion.score == 0 %}
-                            {{ vote_dropdown_button('withdraw', "Vzít zpět") }}
+                            {{ vote_dropdown_button('withdraw', "Withdraw") }}
                         {% endif %}
                         {% if current_user.admin %}
                             {% if suggestion.status in (SS.approved, SS.candidate) %}
-                                {{ vote_dropdown_button('finalize', "Zfinalizovat", "ok-sign") }}
+                                {{ vote_dropdown_button('finalize', "Finalize", "ok-sign") }}
                             {% endif %}
                             {% if suggestion.status == SS.approved %}
-                                {{ vote_dropdown_button('candidate', "Zkandidovat", "record") }}
+                                {{ vote_dropdown_button('candidate', "Candidate", "record") }}
                             {% endif %}
                             {% if suggestion.status != SS.approved %}
                                 {% if suggestion.status == SS.final %}
-                                    {{ vote_dropdown_button('approve', "Odfinalizovat", "ok") }}
+                                    {{ vote_dropdown_button('approve', "Finalize", "ok") }}
                                 {% elif suggestion.status == SS.candidate %}
-                                    {{ vote_dropdown_button('approve', "Odkandinovat", "ok") }}
+                                    {{ vote_dropdown_button('approve', "Demote", "ok") }}
                                 {% else %}
-                                    {{ vote_dropdown_button('approve', "Svolit", "ok") }}
+                                    {{ vote_dropdown_button('approve', "Consent", "ok") }}
                                 {% endif %}
                             {% endif %}
                             {% if suggestion.status != SS.hidden %}
-                                {{ vote_dropdown_button('hide', "Skrýt") }}
+                                {{ vote_dropdown_button('hide', "Hide") }}
                             {% endif %}
                             {% if suggestion.status != SS.deleted %}
-                                {{ vote_dropdown_button('delete', "Smazat", "remove") }}
+                                {{ vote_dropdown_button('delete', "Delete", "remove") }}
                             {% endif %}
                         {% endif %}
                     </ul>
@@ -307,7 +307,7 @@
     {% if term.locked %}
         <div class="locked-info">
             <span class="glyphicon glyphicon-lock locked-icon"></span>
-            <h3>Termín je zamčený</h3>
+            <h3>The term is locked</h3>
             <div class="locked-text">
                 {% if term.lock_reason %}
                     {{ term.lock_reason | urlize | markdown }}
@@ -317,12 +317,12 @@
                 <form method="POST">
                     <input type="hidden" name="action" value="unlock">
                     <button type="submit" class="btn btn-default btn-sm">
-                        Odemknout
+                        Unlock
                     </button>
                 </form>
                 <button class="btn btn-default btn-xs"
                   id="unlock-button" style="margin-top: 8px;">
-                      Mě to nezajímá, já jsem admin
+                    I don't care, I'm an admin
                 </button>
             {% endif %}
         </div>
@@ -335,9 +335,9 @@
                 {% endif %}">
                 <h3>
                     {% if not term.dialogue %}
-                        Návrhy
+                        Suggestions
                     {% else %}
-                        Revize
+                        Revision
                     {% endif %}
                     <button class="btn btn-default btn-sm"
                       id="new-suggestion-button">
@@ -348,7 +348,7 @@
                     <div class="panel panel-default new-suggestion-panel">
                         <div class="panel-heading">
                             <h3 class="panel-title">
-                                Přidat revizi
+                                Add revision
                                 {% if term.latest_revision.revision %}
                                     #{{term.latest_revision.revision + 1}}
                                 {% else %}
@@ -365,7 +365,7 @@
                                     {{suggestion_form.submit}}
                                 </form>
                             {% else %}
-                                <p>Pro přidávání návrhů je potřeba se <a href="{{url_for('login')}}">přihlásit</a>.
+                                <p>To add suggestions, you need to <a href="{{url_for('login')}}">log in</a>.
                             {% endif %}
                         </div>
                     </div>
@@ -373,7 +373,7 @@
                 {% if not term.dialogue %}
                     <div class="panel panel-default new-suggestion-panel">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Přidat návrh</h3>
+                            <h3 class="panel-title">Add suggestion</h3>
                         </div>
                         <div class="panel-body">
                             {% if suggestion_form %}
@@ -381,13 +381,13 @@
                                     <dl>
                                         <dt>Text:</dt>
                                             <dd>{{suggestion_form.text}}</dd>
-                                        <dt>Vysvětlivka:</dt>
+                                        <dt>Explanation:</dt>
                                             <dd>{{suggestion_form.description}}</dd>
                                     </dl>
                                     {{suggestion_form.submit}}
                                 </form>
                             {% else %}
-                                <p>Pro přidávání návrhů je potřeba se <a href="{{url_for('login')}}">přihlásit</a>.
+                                <p>To add suggestions, you need to <a href="{{url_for('login')}}">log in</a>.
                             {% endif %}
                         </div>
                     </div>
@@ -398,12 +398,12 @@
                           id="suggestion-{{suggestion.id}}">
                             {{ suggestion_controls(suggestion) }}
                             {% set SS = db.SuggestionStatus %}
-                            {% set suggestion_labels = {SS.candidate: "kandidát",
-                                                        SS.final: "finální",
-                                                        SS.withdrawn: "vzán zpět",
-                                                        SS.hidden: "skryt",
-                                                        SS.deleted: "smazán",
-                                                        SS.new: "nový"} %}
+                            {% set suggestion_labels = {SS.candidate: "candidate",
+                                                        SS.final: "final",
+                                                        SS.withdrawn: "withdrawn",
+                                                        SS.hidden: "hidden",
+                                                        SS.deleted: "deleted",
+                                                        SS.new: "new"} %}
                             {% if suggestion.status in suggestion_labels.keys() %}
                                 <div class="suggestion-status">
                                     <span class="badge badge-status-{{suggestion.status.name}}">
@@ -472,7 +472,7 @@
                             
                         </li>
                     {% else %}
-                        <p>Žádné návrhy na překlad ještě nejsou...
+                        <p>There are no translation suggestions yet…
                     {% endfor %}
                 </ul>
             </div>
@@ -480,10 +480,10 @@
                 {% else %} col-md-3
                 {% endif %}">
                 <h3>
-                    Komentáře
+                    Comments
                     <span 
                         data-toggle="tooltip" data-placement="top"
-                        title="Komentáře jsou nyní řazeny reverzně chronologicky."
+                        title="Comments are now sorted in reverse chronological order."
                     >
                         {{ glyphicon("chevron-up") }}
                     </span>
@@ -494,7 +494,7 @@
                 </h3>
                 <div class="panel panel-default new-comment-panel">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Přidat komentář</h3>
+                        <h3 class="panel-title">Add comment</h3>
                     </div>
                     <div class="panel-body">
                         {% if comment_form %}
@@ -502,10 +502,10 @@
                                 {{comment_form.comment_text}}
                                 {{comment_form.submit}}
                             </form>
-                            <p>V komentářích jde používat <a href="http://daringfireball.net/projects/markdown/basics">Markdown</a>.
-                            <p>Odkaz se dělá <tt>[takto](http://example.com)</tt>.  Nový odstavec uděláte dvojitým odřádkováním.
+                            <p>You can use <a href="http://daringfireball.net/projects/markdown/basics">Markdown</a> in comments.
+                            <p>A link is made like this <tt>[takto](http://example.com)</tt>.  You make a new paragraph by double spacing.
                         {% else %}
-                            <p>Pro přidávání komentářů je potřeba se <a href="{{url_for('login')}}">přihlásit</a>.
+                            <p>To add comments, you need to <a href="{{url_for('login')}}">log in</a>.
                         {% endif %}
                     </div>
                 </div>
@@ -541,11 +541,11 @@
                                     {% endif %}
                                 </div>
                                 {{ glyphicon("file") }}
-                                Revize #{{revision.revision}}
+                                Revision #{{revision.revision}}
                             </div>
                         {% else %}
                             <div>
-                                Neznámá položka: {{comment}}
+                                Unknown item: {{comment}}
                             </div>
                         {% endif %}
                     {% endfor %}
